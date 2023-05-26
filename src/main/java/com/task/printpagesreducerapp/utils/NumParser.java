@@ -2,7 +2,12 @@ package com.task.printpagesreducerapp.utils;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 public class NumParser {
+    private static final String SPLITTER = ",";
+    private static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
     public static StringBuffer printPageReducer(final Set<Integer> requestPages) {
         Integer[] pagesArray = new Integer[ requestPages.size() ];
         pagesArray = requestPages.toArray(pagesArray);
@@ -25,5 +30,19 @@ public class NumParser {
             }
         }
         return pagesForPrint;
+    }
+    public static boolean validateOriginalPagesList(final String originalPagesList) {
+        return Stream.of(originalPagesList.split(SPLITTER))
+                .map(String::trim)
+                .filter(s -> !s.matches(PATTERN))
+                .collect(Collectors.toSet()).size() > 0;
+    }
+    public static TreeSet<Integer> getSortedUniquePrintPagesSet(final String originalPagesList) {
+        return Stream.of(originalPagesList.split(SPLITTER))
+                .map(String::trim)
+                .filter(s -> s.matches(PATTERN))
+                .map(Integer::parseInt)
+                .filter(number -> number > 0)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 }
