@@ -36,6 +36,7 @@ public class NumParser {
     public static boolean validateOriginalPagesList(final String originalPagesList) {
         return  StringUtils.isBlank(originalPagesList) ||
                 StringUtils.endsWith(originalPagesList, SPLITTER) ||
+                "0".equals(originalPagesList) ||
                 Stream.of(originalPagesList.split(SPLITTER))
                         .map(String::trim)
                         .filter(s -> !s.matches(PATTERN))
