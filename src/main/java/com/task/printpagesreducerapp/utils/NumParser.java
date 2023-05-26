@@ -1,5 +1,7 @@
 package com.task.printpagesreducerapp.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -32,17 +34,22 @@ public class NumParser {
         return pagesForPrint;
     }
     public static boolean validateOriginalPagesList(final String originalPagesList) {
-        return Stream.of(originalPagesList.split(SPLITTER))
-                .map(String::trim)
-                .filter(s -> !s.matches(PATTERN))
-                .collect(Collectors.toSet()).size() > 0;
+        return  StringUtils.isBlank(originalPagesList) ||
+                Stream.of(originalPagesList.split(SPLITTER))
+                        .map(String::trim)
+                        .filter(s -> !s.matches(PATTERN))
+                        .collect(Collectors.toSet()).size() > 0;
     }
     public static TreeSet<Integer> getSortedUniquePrintPagesSet(final String originalPagesList) {
-        return Stream.of(originalPagesList.split(SPLITTER))
-                .map(String::trim)
-                .filter(s -> s.matches(PATTERN))
-                .map(Integer::parseInt)
-                .filter(number -> number > 0)
-                .collect(Collectors.toCollection(TreeSet::new));
+        TreeSet<Integer> response = new TreeSet<>();
+        if (!StringUtils.isBlank(originalPagesList))
+            response =
+                    Stream.of(originalPagesList.split(SPLITTER))
+                            .map(String::trim)
+                            .filter(s -> s.matches(PATTERN))
+                            .map(Integer::parseInt)
+                            .filter(number -> number > 0)
+                            .collect(Collectors.toCollection(TreeSet::new));
+        return response;
     }
 }

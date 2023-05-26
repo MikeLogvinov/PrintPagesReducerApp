@@ -24,17 +24,22 @@ public class ReduceController {
     private static final String REQUEST_DESCRIPTION = "There is print reduce pages REQUEST: ";
 
     @GetMapping(value = "/reducedPageNumbers", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> reducedPageNumbers(@RequestParam("rawPageNumbers") String rawPageNumbers) {
+    public ResponseEntity<?> reducedPageNumbers(@RequestParam("rawPageNumbers") String rawPageNum) {
         try {
-            if (validateOriginalPagesList(rawPageNumbers)) {
-                log.warn(BAD_REQUEST_DESCRIPTION + rawPageNumbers);
+            if (validateOriginalPagesList(rawPageNum)) {
+                log.warn(BAD_REQUEST_DESCRIPTION + rawPageNum);
                 return new ResponseEntity<>(BAD_REQUEST, HttpStatus.BAD_REQUEST);
             }
-            Set<Integer> convertedIdsList = getSortedUniquePrintPagesSet(rawPageNumbers);
-            final PrintPagesResponseDto responseReducedPageNumbers = PrintPagesResponseDto.builder().original(rawPageNumbers).reduced(printPageReducer(convertedIdsList)).build();
-
-            log.info(REQUEST_DESCRIPTION + convertedIdsList);
-            return new ResponseEntity<>(responseReducedPageNumbers, HttpStatus.OK);
+            else {
+                Set<Integer> convertedIdsList = getSortedUniquePrintPagesSet(rawPageNum);
+                final PrintPagesResponseDto respReducedPageNum =
+                        PrintPagesResponseDto.builder().
+                                original(rawPageNum).
+                                reduced(printPageReducer(convertedIdsList))
+                                .build();
+                log.info(REQUEST_DESCRIPTION + convertedIdsList);
+                return new ResponseEntity<>(respReducedPageNum, HttpStatus.OK);
+            }
         }
         catch (Exception e) {
             log.error(e.getMessage());
