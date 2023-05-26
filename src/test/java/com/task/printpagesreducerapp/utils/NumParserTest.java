@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class NumParserTest {
     private String pageNumsOriginReq;
-    private String pageNumsOgnReqChars;
+    private String pageNumsOriginReqChars;
     private Set<Integer> originalPages;
     private StringBuffer reducedPages;
     private final TreeSet<Integer> treeSet = new TreeSet<>();
@@ -24,7 +24,7 @@ public class NumParserTest {
     public void initTests() {
         Integer[] pageNums = new Integer[]{1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1};
         pageNumsOriginReq = "1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1, 0";
-        pageNumsOgnReqChars = "1, 2a, 3, b4, 8, 12, 11, 24, c3544, 11, 1, 1, 0, d";
+        pageNumsOriginReqChars = "1, 2a, 3, b4, 8, 12, 11, 24, c3544, 11, 1, 1, 0, d";
         originalPages = Stream.of(pageNums).collect(Collectors.toCollection(TreeSet::new));
         reducedPages = new StringBuffer().append("1-4,8,11-12,24,3544");
     }
@@ -40,7 +40,7 @@ public class NumParserTest {
     @Order(2)
     @DisplayName("Test validateOriginalPagesList procedure, must return true if contains chars, false if not")
     public void test_validateOriginalPagesList() {
-        assertTrue(validateOriginalPagesList(pageNumsOgnReqChars));
+        assertTrue(validateOriginalPagesList(pageNumsOriginReqChars));
         assertFalse(validateOriginalPagesList(pageNumsOriginReq));
     }
 
@@ -71,5 +71,4 @@ public class NumParserTest {
     public void test_printPageReducer_combined_with_getSortedUniquePrintPagesSet() {
         assertEquals(reducedPages.toString(), printPageReducer(getSortedUniquePrintPagesSet(pageNumsOriginReq)).toString());
     }
-
 }
