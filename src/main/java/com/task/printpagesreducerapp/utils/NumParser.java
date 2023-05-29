@@ -3,6 +3,7 @@ package com.task.printpagesreducerapp.utils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -42,8 +43,8 @@ public class NumParser {
                         .filter(s -> !s.matches(PATTERN))
                         .collect(Collectors.toSet()).size() > 0;
     }
-    public static TreeSet<Integer> getSortedUniquePrintPagesSet(final String originalPagesList) {
-        TreeSet<Integer> response = new TreeSet<>();
+    public static Set<Integer> getSortedUniquePrintPagesSet(final String originalPagesList) {
+        Set<Integer> response = new HashSet<>();
         if (!StringUtils.isBlank(originalPagesList))
             response =
                     Stream.of(originalPagesList.split(SPLITTER))
@@ -51,7 +52,7 @@ public class NumParser {
                             .filter(s -> s.matches(PATTERN))
                             .map(Integer::parseInt)
                             .filter(number -> number > 0)
-                            .collect(Collectors.toCollection(TreeSet::new));
+                            .collect(Collectors.toSet());
         return response;
     }
 }

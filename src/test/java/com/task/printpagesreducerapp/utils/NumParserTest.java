@@ -1,10 +1,11 @@
 package com.task.printpagesreducerapp.utils;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,18 +15,17 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Test NumParser class")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class NumParserTest {
-    private String pageNumsOriginReq;
-    private String pageNumsOriginReqChars;
+    private String pageNumsOriginReq, pageNumsOriginReqChars;
     private Set<Integer> originalPages;
     private StringBuffer reducedPages;
-    private final TreeSet<Integer> treeSet = new TreeSet<>();
+    private Set<Integer> emptySet = new HashSet<>();
 
     @BeforeEach
     public void initTests() {
         Integer[] pageNums = new Integer[]{1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1};
         pageNumsOriginReq = "1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1, 0";
         pageNumsOriginReqChars = "1, 2a, 3, b4, 8, 12, 11, 24, c3544, 11, 1, 1, 0, d";
-        originalPages = Stream.of(pageNums).collect(Collectors.toCollection(TreeSet::new));
+        originalPages = Stream.of(pageNums).collect(Collectors.toSet());
         reducedPages = new StringBuffer().append("1-4,8,11-12,24,3544");
     }
 
@@ -54,15 +54,19 @@ public class NumParserTest {
     @Test
     @Order(4)
     @DisplayName("Test validateOriginalPagesList procedure if request is null, must return true")
-    public void test_validateOriginalPagesList_returns_notValidIfNull() {;
+    public void test_validateOriginalPagesList_returns_notValidIfNull() {
         assertTrue(validateOriginalPagesList(null));
     }
 
     @Test
     @Order(5)
-    @DisplayName("Test getSortedUniquePrintPagesSet, will return empty TreeSet if request is null")
+    @DisplayName("Test getSortedUniquePrintPagesSet, will return empty Set type object if request is null, empty, single string, single mixed string, single zero")
     public void test_getSortedUniquePrintPagesSet_nullPointerException() {
-        assertEquals(treeSet, getSortedUniquePrintPagesSet(null));
+        assertEquals(emptySet, getSortedUniquePrintPagesSet(null));
+        assertEquals(emptySet, getSortedUniquePrintPagesSet(StringUtils.EMPTY));
+        assertEquals(emptySet, getSortedUniquePrintPagesSet("0"));
+        assertEquals(emptySet, getSortedUniquePrintPagesSet(RandomStringUtils.random(9, true, false)));
+        assertEquals(emptySet, getSortedUniquePrintPagesSet(RandomStringUtils.random(9, true, true)));
     }
 
     @Test

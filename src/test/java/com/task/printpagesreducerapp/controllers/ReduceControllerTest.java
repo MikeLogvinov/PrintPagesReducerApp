@@ -1,5 +1,6 @@
 package com.task.printpagesreducerapp.controllers;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.task.printpagesreducerapp.utils.NumParser.getSortedUniquePrintPagesSet;
-import static com.task.printpagesreducerapp.utils.NumParser.printPageReducer;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,14 +19,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ReduceControllerTest {
     @Autowired
     private MockMvc mvc;
-    private String pageNumsOriginReq;
-    private String pageNumsOriginReqChars;
+    private String pageNumsOriginReq, reducedPages, pageNumsOriginReqWithChars;
     private final static String URL_PATH = "/api/v1/reducedPageNumbers";
 
     @BeforeEach
     public void initTests() {
         pageNumsOriginReq = "1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1, 0";
-        pageNumsOriginReqChars = "1, 2a, 3, b4, 8, 12, 11, 24, c3544, 11, 1, 1, 0, d";
+        pageNumsOriginReqWithChars = "1, 2a, 3, b4, 8, 12, 11, 24, c3544, 11, 1, 1, 0, d";
+        reducedPages = "1-4,8,11-12,24,3544";
     }
 
     @Test
@@ -43,7 +42,8 @@ public class ReduceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.original").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.reduced").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.reduced").value(printPageReducer(getSortedUniquePrintPagesSet(pageNumsOriginReq)).toString()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.original").value(pageNumsOriginReq))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.reduced").value(reducedPages));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class ReduceControllerTest {
     {
         mvc.perform(MockMvcRequestBuilders
                         .get(URL_PATH)
-                        .param("rawPageNumbers", pageNumsOriginReqChars)
+                        .param("rawPageNumbers", pageNumsOriginReqWithChars)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -63,23 +63,39 @@ public class ReduceControllerTest {
 
     @Test
     @Order(3)
-    @DisplayName("Test reducedPageNumbersApi 400, must return Bad Request in case of empty request")
+    @DisplayName("Test reducedPageNumbersApi 400, must return Bad Request in case of empty, zero, single string request")
     public void test_reducedPageNumbersApi_400_with_EmptyRequest() throws Exception
-    {        mvc.perform(MockMvcRequestBuilders
+    {
+        mvc.perform(MockMvcRequestBuilders
                         .get(URL_PATH)
                         .param("rawPageNumbers", StringUtils.EMPTY)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get(URL_PATH)
+                        .param("rawPageNumbers", "0")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get(URL_PATH)
+                        .param("rawPageNumbers", RandomStringUtils.random(9, true, false))
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+            .andExpect(status().isBadRequest());
     }
 
     @Test
     @Order(4)
     @DisplayName("Test reducedPageNumbersApi 400, must return Bad Request in case of big value")
     public void test_reducedPageNumbersApi_400_big_integer_value() throws Exception
-    {        mvc.perform(MockMvcRequestBuilders
+    {
+        mvc.perform(MockMvcRequestBuilders
                         .get(URL_PATH)
-                        .param("rawPageNumbers", "9999999999")
+                        .param("rawPageNumbers", RandomStringUtils.random(10, false, true))
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
