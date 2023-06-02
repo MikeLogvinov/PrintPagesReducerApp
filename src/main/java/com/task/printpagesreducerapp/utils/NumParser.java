@@ -10,10 +10,10 @@ import java.util.stream.Stream;
 public class NumParser {
     private static final String SPLITTER = ",";
     private static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
-    public static StringBuffer printPageReducer(final Set<Integer> requestPages) {
+    public static StringBuilder printPageReducer(final Set<Integer> requestPages) {
         Integer[] pagesArray = new Integer[ requestPages.size() ];
         pagesArray = requestPages.toArray(pagesArray);
-        StringBuffer pagesForPrint = new StringBuffer();
+        StringBuilder pagesForPrint = new StringBuilder();
         int j = 0;
         Arrays.sort(pagesArray);
 

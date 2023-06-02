@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ReduceController.class)
 @DisplayName("Test ReduceController class")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ReduceControllerTest {
+class ReduceControllerTest {
     @Autowired
     private MockMvc mvc;
     private String pageNumsOriginReq, reducedPages, pageNumsOriginReqWithChars;
@@ -32,7 +32,7 @@ public class ReduceControllerTest {
     @Test
     @Order(1)
     @DisplayName("Test reducedPageNumbersApi 200, must return correct reduced print page list")
-    public void test_reducedPageNumbersApi_200() throws Exception
+    void test_reducedPageNumbersApi_200() throws Exception
     {
         mvc.perform(MockMvcRequestBuilders
                         .get(URL_PATH)
@@ -49,7 +49,7 @@ public class ReduceControllerTest {
     @Test
     @Order(2)
     @DisplayName("Test reducedPageNumbersApi 400, must return 400 Response in case of wrong requested page list with chars")
-    public void test_reducedPageNumbersApi_400() throws Exception
+    void test_reducedPageNumbersApi_400() throws Exception
     {
         mvc.perform(MockMvcRequestBuilders
                         .get(URL_PATH)
@@ -64,7 +64,7 @@ public class ReduceControllerTest {
     @Test
     @Order(3)
     @DisplayName("Test reducedPageNumbersApi 400, must return Bad Request in case of empty, zero, single string request")
-    public void test_reducedPageNumbersApi_400_with_EmptyRequest() throws Exception
+    void test_reducedPageNumbersApi_400_with_EmptyRequest() throws Exception
     {
         mvc.perform(MockMvcRequestBuilders
                         .get(URL_PATH)
@@ -91,7 +91,7 @@ public class ReduceControllerTest {
     @Test
     @Order(4)
     @DisplayName("Test reducedPageNumbersApi 400, must return Bad Request in case of big value")
-    public void test_reducedPageNumbersApi_400_big_integer_value() throws Exception
+    void test_reducedPageNumbersApi_400_big_integer_value() throws Exception
     {
         mvc.perform(MockMvcRequestBuilders
                         .get(URL_PATH)
