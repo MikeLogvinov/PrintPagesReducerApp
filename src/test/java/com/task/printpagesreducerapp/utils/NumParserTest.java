@@ -13,7 +13,6 @@ import static com.task.printpagesreducerapp.utils.NumParser.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test NumParser class")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class NumParserTest {
     private String pageNumsOriginReq, pageNumsOriginReqChars;
     private Set<Integer> originalPages;
@@ -30,14 +29,12 @@ class NumParserTest {
     }
 
     @Test
-    @Order(1)
     @DisplayName("Test sortedUniquePrintPagesSet procedure, must return unique sorted list without zero")
     void test_getSortedUniquePrintPagesSet() {
         assertEquals(originalPages, getSortedUniquePrintPagesSet(pageNumsOriginReq));
     }
 
     @Test
-    @Order(2)
     @DisplayName("Test validateOriginalPagesList procedure, must return true if contains chars, false if not")
     void test_validateOriginalPagesList() {
         assertTrue(validateOriginalPagesList(pageNumsOriginReqChars));
@@ -45,21 +42,18 @@ class NumParserTest {
     }
 
     @Test
-    @Order(3)
     @DisplayName("Test printPageReducer procedure, must correctly reduced page numbers")
     void test_printPageReducer() {
         assertEquals(reducedPages.toString(), printPageReducer(originalPages).toString());
     }
 
     @Test
-    @Order(4)
     @DisplayName("Test validateOriginalPagesList procedure if request is null, must return true")
     void test_validateOriginalPagesList_returns_notValidIfNull() {
         assertTrue(validateOriginalPagesList(null));
     }
 
     @Test
-    @Order(5)
     @DisplayName("Test getSortedUniquePrintPagesSet, will return empty Set type object if request is null, empty, single string, single mixed string, single zero")
     void test_getSortedUniquePrintPagesSet_nullPointerException() {
         assertEquals(emptySet, getSortedUniquePrintPagesSet(null));
@@ -70,7 +64,6 @@ class NumParserTest {
     }
 
     @Test
-    @Order(6)
     @DisplayName("Test printPageReducer combined with getSortedUniquePrintPagesSet, will return correct reduced print page list")
     void test_printPageReducer_combined_with_getSortedUniquePrintPagesSet() {
         assertEquals(reducedPages.toString(), printPageReducer(getSortedUniquePrintPagesSet(pageNumsOriginReq)).toString());
