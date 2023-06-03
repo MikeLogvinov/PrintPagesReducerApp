@@ -45,7 +45,7 @@ public class ReduceController {
                 return new ResponseEntity<>(BAD_REQUEST, HttpStatus.BAD_REQUEST);
             }
             else {
-                Set<Integer> convertedIdsList = getSortedUniquePrintPagesSet(rawPageNum);
+                Set<Integer> convertedIdsList = getSortedUniquePrintPagesSet();
                 final PrintPagesResponseDto respReducedPageNum =
                         PrintPagesResponseDto.builder().
                                 original(rawPageNum).

@@ -2,14 +2,13 @@ package com.task.printpagesreducerapp.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 public class NumParser {
     private static final String SPLITTER = ",";
     private static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
+    private static Map<Boolean, List<String>> splitPagesCorrectListWrongList = new HashMap<>();
     public static StringBuilder printPageReducer(final Set<Integer> requestPages) {
         Integer[] pagesArray = new Integer[ requestPages.size() ];
         pagesArray = requestPages.toArray(pagesArray);
@@ -34,24 +33,30 @@ public class NumParser {
         return pagesForPrint;
     }
     public static boolean validateOriginalPagesList(final String originalPagesList) {
+        splitPagesCorrectListWrongList(originalPagesList);
         return  StringUtils.isBlank(originalPagesList) ||
                 StringUtils.endsWith(originalPagesList, SPLITTER) ||
                 "0".equals(originalPagesList) ||
-                Stream.of(originalPagesList.split(SPLITTER))
-                        .map(String::trim)
-                        .filter(s -> !s.matches(PATTERN))
-                        .collect(Collectors.toSet()).size() > 0;
+                splitPagesCorrectListWrongList.isEmpty() || !splitPagesCorrectListWrongList.get(false).isEmpty();
     }
-    public static Set<Integer> getSortedUniquePrintPagesSet(final String originalPagesList) {
+    public static Set<Integer> getSortedUniquePrintPagesSet() {
         Set<Integer> response = new HashSet<>();
-        if (!StringUtils.isBlank(originalPagesList))
-            response =
-                    Stream.of(originalPagesList.split(SPLITTER))
-                            .map(String::trim)
-                            .filter(s -> s.matches(PATTERN))
-                            .map(Integer::parseInt)
-                            .filter(number -> number > 0)
-                            .collect(Collectors.toSet());
+        if (!splitPagesCorrectListWrongList.isEmpty())
+            response = splitPagesCorrectListWrongList.get(true)
+                    .stream()
+                    .map(Integer::parseInt)
+                    .filter(number -> number > 0)
+                    .collect(Collectors.toSet());
         return response;
     }
+    private static void splitPagesCorrectListWrongList (final String originalPagesList) {
+        if (!StringUtils.isBlank(originalPagesList))
+        {
+            splitPagesCorrectListWrongList =
+                    Stream.of(originalPagesList.split(SPLITTER))
+                            .map(String::trim)
+                            .collect(Collectors.partitioningBy(nun -> nun.matches(PATTERN)));
+        }
+    }
+
 }
