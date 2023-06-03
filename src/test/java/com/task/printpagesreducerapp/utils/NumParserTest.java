@@ -56,7 +56,7 @@ class NumParserTest {
     }
 
     @Test
-    @DisplayName("Test getSortedUniquePrintPagesSet, will return empty Set type object if request is null, empty, single string, single mixed string, single zero")
+    @DisplayName("Test getSortedUniquePrintPagesSet, will return empty Set type object if request is single string, single mixed string, single zero, not Integer value")
     void test_getSortedUniquePrintPagesSet_nullPointerException() {
         validateOriginalPagesList("0");
         assertEquals(emptySet, getSortedUniquePrintPagesSet());
@@ -69,11 +69,12 @@ class NumParserTest {
     }
 
     @Test
-    @DisplayName("Test printPageReducer combined with getSortedUniquePrintPagesSet, will return correct reduced print page list")
+    @DisplayName("Test getSortedUniquePrintPagesSet and printPageReducer will return correct page list")
     void test_printPageReducer_combined_with_getSortedUniquePrintPagesSet() {
         validateOriginalPagesList(null);
         assertEquals(emptySet, getSortedUniquePrintPagesSet());
         validateOriginalPagesList(StringUtils.EMPTY);
+        assertEquals(emptySet, getSortedUniquePrintPagesSet());
         assertEquals(emptySet, getSortedUniquePrintPagesSet());
         validateOriginalPagesList(pageNumsOriginReq);
         assertEquals(reducedPages.toString(), printPageReducer(getSortedUniquePrintPagesSet()).toString());
