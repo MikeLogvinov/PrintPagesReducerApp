@@ -9,6 +9,7 @@ public class NumParser {
     private static final String SPLITTER = ",";
     private static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
     private static Map<Boolean, List<String>> splitPagesCorrectListWrongList = new HashMap<>();
+    private NumParser() {}
     public static StringBuilder printPageReducer(final Set<Integer> requestPages) {
         Integer[] pagesArray = new Integer[ requestPages.size() ];
         pagesArray = requestPages.toArray(pagesArray);
