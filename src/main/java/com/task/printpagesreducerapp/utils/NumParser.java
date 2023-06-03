@@ -50,7 +50,7 @@ public class NumParser {
                     .collect(Collectors.toSet());
         return response;
     }
-    private static void splitPagesCorrectListWrongList (final String originalPagesList) {
+    public static void splitPagesCorrectListWrongList (final String originalPagesList) {
         if (!StringUtils.isBlank(originalPagesList))
         {
             splitPagesCorrectListWrongList =

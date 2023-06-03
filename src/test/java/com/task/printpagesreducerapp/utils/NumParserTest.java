@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Test NumParser class")
 class NumParserTest {
     private String pageNumsOriginReq, pageNumsOriginReqChars;
-    private Set<Integer> originalPages;
+    private Set<Integer> originalPages, pageNumbersBelongsTrueList;
     private StringBuilder reducedPages;
     private final Set<Integer> emptySet = new HashSet<>();
 
@@ -26,12 +26,14 @@ class NumParserTest {
         pageNumsOriginReqChars = "1, 2a, 3, b4, 8, 12, 11, 24, c3544, 11, 1, 1, 0, d";
         originalPages = Stream.of(pageNums).collect(Collectors.toSet());
         reducedPages = new StringBuilder().append("1-4,8,11-12,24,3544");
+        pageNumbersBelongsTrueList =  Stream.of(1, 3, 8, 24, 11, 12).collect(Collectors.toSet());
     }
 
     @Test
     @DisplayName("Test sortedUniquePrintPagesSet procedure, must return unique sorted list without zero")
     void test_getSortedUniquePrintPagesSet() {
-        assertEquals(originalPages, getSortedUniquePrintPagesSet(pageNumsOriginReq));
+        validateOriginalPagesList(pageNumsOriginReq);
+        assertEquals(originalPages, getSortedUniquePrintPagesSet());
     }
 
     @Test
@@ -56,16 +58,31 @@ class NumParserTest {
     @Test
     @DisplayName("Test getSortedUniquePrintPagesSet, will return empty Set type object if request is null, empty, single string, single mixed string, single zero")
     void test_getSortedUniquePrintPagesSet_nullPointerException() {
-        assertEquals(emptySet, getSortedUniquePrintPagesSet(null));
-        assertEquals(emptySet, getSortedUniquePrintPagesSet(StringUtils.EMPTY));
-        assertEquals(emptySet, getSortedUniquePrintPagesSet("0"));
-        assertEquals(emptySet, getSortedUniquePrintPagesSet(RandomStringUtils.random(9, true, false)));
-        assertEquals(emptySet, getSortedUniquePrintPagesSet(RandomStringUtils.random(9, true, true)));
+        validateOriginalPagesList("0");
+        assertEquals(emptySet, getSortedUniquePrintPagesSet());
+        validateOriginalPagesList(RandomStringUtils.random(9, true, false));
+        assertEquals(emptySet, getSortedUniquePrintPagesSet());
+        validateOriginalPagesList(RandomStringUtils.random(9, true, false));
+        assertEquals(emptySet, getSortedUniquePrintPagesSet());
+        validateOriginalPagesList(RandomStringUtils.random(10, false, true));
+        assertEquals(emptySet, getSortedUniquePrintPagesSet());
     }
 
     @Test
     @DisplayName("Test printPageReducer combined with getSortedUniquePrintPagesSet, will return correct reduced print page list")
     void test_printPageReducer_combined_with_getSortedUniquePrintPagesSet() {
-        assertEquals(reducedPages.toString(), printPageReducer(getSortedUniquePrintPagesSet(pageNumsOriginReq)).toString());
+        validateOriginalPagesList(null);
+        assertEquals(emptySet, getSortedUniquePrintPagesSet());
+        validateOriginalPagesList(StringUtils.EMPTY);
+        assertEquals(emptySet, getSortedUniquePrintPagesSet());
+        validateOriginalPagesList(pageNumsOriginReq);
+        assertEquals(reducedPages.toString(), printPageReducer(getSortedUniquePrintPagesSet()).toString());
+    }
+
+    @Test
+    @DisplayName("Test splitPagesCorrectListWrongList procedure, must correctly create  reduced page numbers")
+    void test_splitPagesCorrectListWrongList() {
+        splitPagesCorrectListWrongList(pageNumsOriginReqChars);
+        assertEquals(pageNumbersBelongsTrueList,getSortedUniquePrintPagesSet());
     }
 }
