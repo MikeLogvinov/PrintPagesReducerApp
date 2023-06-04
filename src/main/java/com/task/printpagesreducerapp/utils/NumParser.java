@@ -6,8 +6,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 public class NumParser {
-    private static final String SPLITTER = ",";
-    private static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
+    public static final String SPLITTER = ",";
+    public static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
+    public static final String BAD_REQUEST = "This is not valid format or page numbers ";
+    public static final String BAD_REQUEST_SYMBOLS = "maybe it's extra commas, empty values or zero";
     private static Map<Boolean, List<String>> splitPagesCorrectListWrongList;
     private NumParser() {}
     public static StringBuilder printPageReducer(final Set<Integer> requestPages) {
@@ -38,7 +40,8 @@ public class NumParser {
         return  StringUtils.isBlank(originalPagesList) ||
                 StringUtils.endsWith(originalPagesList, SPLITTER) ||
                 "0".equals(originalPagesList) ||
-                splitPagesCorrectListWrongList.isEmpty() || !splitPagesCorrectListWrongList.get(false).isEmpty();
+                splitPagesCorrectListWrongList.isEmpty() ||
+                !splitPagesCorrectListWrongList.get(false).isEmpty();
     }
     public static Set<Integer> getSortedUniquePrintPagesSet() {
         Set<Integer> response = new HashSet<>();
@@ -53,7 +56,6 @@ public class NumParser {
         } finally {
             splitPagesCorrectListWrongList = null;
         }
-
     }
     public static void splitPagesCorrectListWrongList (final String originalPagesList) {
         if (!StringUtils.isBlank(originalPagesList))
@@ -64,5 +66,12 @@ public class NumParser {
                             .collect(Collectors.partitioningBy(nun -> nun.matches(PATTERN)));
         }
     }
-
+    public static String getWrongPageListNumbers() {
+        String notValidPagesList = BAD_REQUEST_SYMBOLS;
+        if (splitPagesCorrectListWrongList != null && !splitPagesCorrectListWrongList.isEmpty() && !splitPagesCorrectListWrongList.get(false).isEmpty())
+        {
+            notValidPagesList = splitPagesCorrectListWrongList.get(false).stream().map(String::trim).collect(Collectors.joining(","));
+        }
+        return BAD_REQUEST + notValidPagesList;
+    }
 }

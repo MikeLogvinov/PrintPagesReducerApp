@@ -85,4 +85,22 @@ class NumParserTest {
         splitPagesCorrectListWrongList(pageNumsOriginReqChars);
         assertEquals(pageNumbersBelongsTrueList,getSortedUniquePrintPagesSet());
     }
+
+    @Test
+    @DisplayName("Test getWrongPageListNumbers procedure, must return wrong page numbers, symbols with warning text")
+    void test_getWrongPageListNumbers() {
+        splitPagesCorrectListWrongList(pageNumsOriginReqChars);
+        assertEquals(BAD_REQUEST + "2a,b4,c3544,d",getWrongPageListNumbers());
+        splitPagesCorrectListWrongList("0");
+        assertEquals(BAD_REQUEST + BAD_REQUEST_SYMBOLS,getWrongPageListNumbers());
+        splitPagesCorrectListWrongList(StringUtils.EMPTY);
+        assertEquals(BAD_REQUEST + BAD_REQUEST_SYMBOLS,getWrongPageListNumbers());
+        String bigStringNumber = "9999999999";
+        splitPagesCorrectListWrongList(bigStringNumber);
+        assertEquals(BAD_REQUEST + bigStringNumber,getWrongPageListNumbers());
+        splitPagesCorrectListWrongList("0");
+        assertEquals(BAD_REQUEST + BAD_REQUEST_SYMBOLS,getWrongPageListNumbers());
+        splitPagesCorrectListWrongList(",");
+        assertEquals(BAD_REQUEST + BAD_REQUEST_SYMBOLS,getWrongPageListNumbers());
+    }
 }

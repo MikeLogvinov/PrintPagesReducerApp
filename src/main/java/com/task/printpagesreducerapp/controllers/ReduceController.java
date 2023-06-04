@@ -26,7 +26,6 @@ import static com.task.printpagesreducerapp.utils.NumParser.*;
 @Slf4j
 public class ReduceController {
     private static final String INTERNAL_SERVER_ERROR = "There is an issue.";
-    private static final String BAD_REQUEST = "Only integer numbers separated by commas are accepted.";
     private static final String BAD_REQUEST_DESCRIPTION = "There is a BAD REQUEST: ";
     private static final String REQUEST_DESCRIPTION = "There is a print reduce pages REQUEST: ";
 
@@ -42,7 +41,7 @@ public class ReduceController {
         try {
             if (validateOriginalPagesList(rawPageNum)) {
                 log.warn(BAD_REQUEST_DESCRIPTION + rawPageNum);
-                return new ResponseEntity<>(BAD_REQUEST, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(getWrongPageListNumbers(), HttpStatus.BAD_REQUEST);
             }
             else {
                 Set<Integer> convertedIdsList = getSortedUniquePrintPagesSet();
