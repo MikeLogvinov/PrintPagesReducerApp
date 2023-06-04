@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 public class NumParser {
     private static final String SPLITTER = ",";
     private static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
-    private static Map<Boolean, List<String>> splitPagesCorrectListWrongList = new HashMap<>();
+    private static Map<Boolean, List<String>> splitPagesCorrectListWrongList;
     private NumParser() {}
     public static StringBuilder printPageReducer(final Set<Integer> requestPages) {
         Integer[] pagesArray = new Integer[ requestPages.size() ];
@@ -42,13 +42,18 @@ public class NumParser {
     }
     public static Set<Integer> getSortedUniquePrintPagesSet() {
         Set<Integer> response = new HashSet<>();
-        if (!splitPagesCorrectListWrongList.isEmpty())
-            response = splitPagesCorrectListWrongList.get(true)
-                    .stream()
-                    .map(Integer::parseInt)
-                    .filter(number -> number > 0)
-                    .collect(Collectors.toSet());
-        return response;
+        try {
+            if (splitPagesCorrectListWrongList != null && !splitPagesCorrectListWrongList.isEmpty())
+                response = splitPagesCorrectListWrongList.get(true)
+                        .stream()
+                        .map(Integer::parseInt)
+                        .filter(number -> number > 0)
+                        .collect(Collectors.toSet());
+            return response;
+        } finally {
+            splitPagesCorrectListWrongList = null;
+        }
+
     }
     public static void splitPagesCorrectListWrongList (final String originalPagesList) {
         if (!StringUtils.isBlank(originalPagesList))
