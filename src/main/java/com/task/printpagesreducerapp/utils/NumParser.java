@@ -9,7 +9,7 @@ public class NumParser {
     public static final String SPLITTER = ",";
     public static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
     public static final String BAD_REQUEST = "There is not valid format of your page numbers. Please, check ";
-    public static final String BAD_REQUEST_SYMBOLS = "extra commas, empty values or zeros";
+    public static final String BAD_REQUEST_SYMBOLS = "extra commas, empty values or zeros and etc.";
     private static Map<Boolean, List<String>> splitPagesCorrectListWrongList;
     private NumParser() {}
     public static StringBuilder printPageReducer(final Set<Integer> requestPages) {
@@ -20,16 +20,13 @@ public class NumParser {
         Arrays.sort(pagesArray);
 
         for (int i = 0; i < pagesArray.length; i++) {
-            if ( i != pagesArray.length - 1 && pagesArray[i] == (pagesArray[i + 1] - 1)) { continue; }
-            else {
-                int pagesNumber = i + 1 - j;
-                if (pagesNumber > 1) {
+            if (i == pagesArray.length - 1 || pagesArray[i] != (pagesArray[i + 1] - 1)) {
+                if ((i + 1 - j) > 1) {
                     pagesForPrint.append(pagesArray[j]).append("-").append(pagesArray[i]);
-                }
-                else {
+                } else {
                     pagesForPrint.append(pagesArray[i]);
                 }
-                if (i != pagesArray.length - 1) { pagesForPrint.append(","); }
+                if (i != pagesArray.length - 1) pagesForPrint.append(",");
                 j = i + 1;
             }
         }
