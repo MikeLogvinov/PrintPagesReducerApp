@@ -13,6 +13,12 @@ The project is realized an API for getting reduced print pages list.
 | :-------- | :------- | :------------------------- |
 | `rawPageNumbers` | `string` | **Required**. List of comma separated page numbers |
 
+## Getting Started
+To get started with this project, you will need to have the following installed on your local machine:
+
+- JDK 11+
+- Maven 2.7.12
+
 ## Run Locally
 Firstly, you need to start [Windows PowerShell](https://www.techtarget.com/searchwindowsserver/definition/PowerShell#:~:text=PowerShell%20is%20an%20object%2Doriented,systems%20and%20automate%20administrative%20tasks.).
 <br />
@@ -22,6 +28,11 @@ Firstly, you need to start [Windows PowerShell](https://www.techtarget.com/searc
   mvn -version
 ```
 _If not, look at [instruction](https://phoenixnap.com/kb/install-maven-windows) of maven installation_
+
+Check that the java 11 is [istalled](https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/windows-7-install.html) locally as well.
+```windows
+  java -version
+```
 
 **Clone** or download [zip](https://github.com/MikeLogvinov/PrintPagesReducerApp/archive/refs/heads/master.zip) of the project
 
@@ -38,17 +49,14 @@ Go to the **project directory**
 **Install dependencies**
 
 ```windows
-  mvn install
+  mvn clean install
 ```
-Check that the java 11 is [istalled](https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/windows-7-install.html) locally as well.
+
+**Run project**
 ```windows
-  java -version
+  mvn spring-boot:run
 ```
-**Start server** and **Run project**
-```windows
-  java -jar .\target\PrintPagesReducerApp-0.0.1-SNAPSHOT.jar
-```
-Web page should be accessible on http://localhost:8080/api/v1/reducedPageNumbers?rawPageNumbers=
+The application will be available at http://localhost:8080/api/v1/reducedPageNumbers?rawPageNumbers=
 <br /><br />**Demo**<br />
 ![pagereducer.gif](assets%2Fimages%2Fpagereducer.gif)
 
@@ -75,7 +83,7 @@ Web page should be accessible on http://localhost:9090/api/v1/reducedPageNumbers
 ## Documentation the API using OpenAPI 3.0:
 **Run project** on server
 ```windows
-  java -jar .\target\PrintPagesReducerApp-0.0.1-SNAPSHOT.jar
+  mvn spring-boot:run
 ```
 Open a link  < http://... >/swagger-ui/index.html
 <br /><br />Demo<br />
@@ -84,7 +92,7 @@ Open a link  < http://... >/swagger-ui/index.html
 
 **Client:** Web Browser
 
-**Server:** Apache Tomcat/9.0.75, Spring Boot 2.7.12, Java 11
+**Server:** Apache Tomcat/9.0.75, Spring Boot 2.7.12, Java 11, Swagger, Maven 2.7.12
 
 ## Author
 
