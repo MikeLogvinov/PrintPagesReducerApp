@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 public class NumParser {
     public static final String SPLITTER = ",";
     public static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
-    public static final String BAD_REQUEST = "This is not valid format or page numbers ";
+    public static final String BAD_REQUEST = "There is not valid format of your page numbers. Please, check it ";
     public static final String BAD_REQUEST_SYMBOLS = "maybe it's extra commas, empty values or zero";
     private static Map<Boolean, List<String>> splitPagesCorrectListWrongList;
     private NumParser() {}
