@@ -8,8 +8,8 @@ import java.util.stream.Stream;
 public class NumParser {
     public static final String SPLITTER = ",";
     public static final String PATTERN = "\\d{1,9}"; // only integer values, each has to contain less than 10 symbols
-    public static final String BAD_REQUEST = "There is not valid format of your page numbers. Please, check it ";
-    public static final String BAD_REQUEST_SYMBOLS = "maybe it's extra commas, empty values or zero";
+    public static final String BAD_REQUEST = "There is not valid format of your page numbers. Please, check ";
+    public static final String BAD_REQUEST_SYMBOLS = "extra commas, empty values or zeros";
     private static Map<Boolean, List<String>> splitPagesCorrectListWrongList;
     private NumParser() {}
     public static StringBuilder printPageReducer(final Set<Integer> requestPages) {
@@ -39,9 +39,11 @@ public class NumParser {
         splitPagesCorrectListWrongList(originalPagesList);
         return  StringUtils.isBlank(originalPagesList) ||
                 StringUtils.endsWith(originalPagesList, SPLITTER) ||
-                "0".equals(originalPagesList) ||
                 splitPagesCorrectListWrongList.isEmpty() ||
-                !splitPagesCorrectListWrongList.get(false).isEmpty();
+                !splitPagesCorrectListWrongList.get(false).isEmpty() ||
+                !splitPagesCorrectListWrongList.get(true).stream()
+                        .filter(s -> s.startsWith("0"))
+                        .collect(Collectors.toSet()).isEmpty();
     }
     public static Set<Integer> getSortedUniquePrintPagesSet() {
         Set<Integer> response = new HashSet<>();

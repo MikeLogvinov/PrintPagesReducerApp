@@ -18,13 +18,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ReduceControllerTest {
     @Autowired
     private MockMvc mvc;
-    private String pageNumsOriginReq, reducedPages, pageNumsOriginReqWithChars;
+    private String pageNumsOriginReq, reducedPages, pageNumsOriginReqWithChars, pageNumsOriginReqWithZeros;
     private final static String URL_PATH = "/api/v1/reducedPageNumbers";
 
     @BeforeEach
     public void initTests() {
-        pageNumsOriginReq = "1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1, 0";
+        pageNumsOriginReq = "1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1";
         pageNumsOriginReqWithChars = "1, 2a, 3, b4, 8, 12, 11, 24, c3544, 11, 1, 1, 0, d";
+        pageNumsOriginReqWithZeros = "0, 00, 000, 01, 05";
         reducedPages = "1-4,8,11-12,24,3544";
     }
 
@@ -91,6 +92,18 @@ class ReduceControllerTest {
         mvc.perform(MockMvcRequestBuilders
                         .get(URL_PATH)
                         .param("rawPageNumbers", RandomStringUtils.random(10, false, true))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Test reducedPageNumbersApi 400, must return 400 Response in case of wrong requested page list with single zeros or starts with zero numbers, etc")
+    void test_reducedPageNumbersApi_400_contains_zeros() throws Exception
+    {
+        mvc.perform(MockMvcRequestBuilders
+                        .get(URL_PATH)
+                        .param("rawPageNumbers", pageNumsOriginReqWithZeros)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test NumParser class")
 class NumParserTest {
-    private String pageNumsOriginReq, pageNumsOriginReqChars;
+    private String pageNumsOriginReq, pageNumsOriginReqChars, pageNumsOriginReqWithZeros;
     private Set<Integer> originalPages, pageNumbersBelongsTrueList;
     private StringBuilder reducedPages;
     private final Set<Integer> emptySet = new HashSet<>();
@@ -22,11 +22,12 @@ class NumParserTest {
     @BeforeEach
     public void initTests() {
         Integer[] pageNums = new Integer[]{1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1};
-        pageNumsOriginReq = "1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1, 0";
+        pageNumsOriginReq = "1, 2, 3, 4, 8, 12, 11, 24, 3544, 11, 1, 1";
         pageNumsOriginReqChars = "1, 2a, 3, b4, 8, 12, 11, 24, c3544, 11, 1, 1, 0, d";
         originalPages = Stream.of(pageNums).collect(Collectors.toSet());
         reducedPages = new StringBuilder().append("1-4,8,11-12,24,3544");
         pageNumbersBelongsTrueList =  Stream.of(1, 3, 8, 24, 11, 12).collect(Collectors.toSet());
+        pageNumsOriginReqWithZeros = "0, 00, 000, 01, 05";
     }
 
     @Test
@@ -37,10 +38,11 @@ class NumParserTest {
     }
 
     @Test
-    @DisplayName("Test validateOriginalPagesList procedure, must return true if contains chars, false if not")
+    @DisplayName("Test validateOriginalPagesList procedure, must return true if contains chars and false if contains single zeros, starts with zero numbers")
     void test_validateOriginalPagesList() {
         assertTrue(validateOriginalPagesList(pageNumsOriginReqChars));
         assertFalse(validateOriginalPagesList(pageNumsOriginReq));
+        assertTrue(validateOriginalPagesList(pageNumsOriginReqWithZeros));
     }
 
     @Test
