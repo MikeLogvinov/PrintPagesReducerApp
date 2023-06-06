@@ -46,7 +46,7 @@ public class NumParser {
     public static Set<Integer> getSortedUniquePrintPagesSet() {
         Set<Integer> response = new HashSet<>();
         try {
-            if (splitPagesCorrectListWrongList != null && !splitPagesCorrectListWrongList.isEmpty())
+            if (splitPagesCorrectListWrongList != null && !splitPagesCorrectListWrongList.get(true).isEmpty())
                 response = splitPagesCorrectListWrongList.get(true)
                         .stream()
                         .map(Integer::parseInt)
@@ -65,12 +65,21 @@ public class NumParser {
                             .map(String::trim)
                             .collect(Collectors.partitioningBy(nun -> nun.matches(PATTERN)));
         }
+        else {
+            splitPagesCorrectListWrongList = null;
+        }
     }
     public static String getWrongPageListNumbers() {
         String notValidPagesList = BAD_REQUEST_SYMBOLS;
-        if (splitPagesCorrectListWrongList != null && !splitPagesCorrectListWrongList.isEmpty() && !splitPagesCorrectListWrongList.get(false).isEmpty())
+        if (splitPagesCorrectListWrongList != null &&
+                !splitPagesCorrectListWrongList.isEmpty() &&
+                !splitPagesCorrectListWrongList.get(false).isEmpty())
         {
-            notValidPagesList = splitPagesCorrectListWrongList.get(false).stream().map(String::trim).collect(Collectors.joining(","));
+            notValidPagesList = splitPagesCorrectListWrongList
+                    .get(false)
+                    .stream()
+                    .map(String::trim)
+                    .collect(Collectors.joining(","));
         }
         return BAD_REQUEST + notValidPagesList;
     }
